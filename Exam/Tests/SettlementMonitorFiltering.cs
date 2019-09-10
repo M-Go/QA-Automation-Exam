@@ -39,7 +39,7 @@ namespace Exam.Tests
         public void NavigateToPlayerHistory()
         {
             _settlementMonitorPage = new SettlementMonitorPage();
-            _playerHistoryPage = new PlayerHistoryPage();
+            //_playerHistoryPage = new PlayerHistoryPage();
             _settlementMonitorPage
                 .SelectDate()
                 .SearchEventByText()
