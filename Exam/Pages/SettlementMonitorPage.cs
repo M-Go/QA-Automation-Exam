@@ -16,7 +16,7 @@ namespace Exam.Pages
         private IWebElement _eventStageField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(., 'All event stages')]"));
         private IWebElement _eventStageFinished => _driver.FindElement(By.XPath("//div/ul/li[@class='multiselect__element'][contains(., 'Finished')]"));
         private IWebElement _eventRow => _driver.FindElement(By.XPath("//div[@class='alert-item']"));
-        private IWebElement _betLogsButton => _driver.FindElement(By.XPath("//button[@class='transparent icon']"));
+        private IWebElement _betLogsButton => _driver.FindElement(By.XPath("//button[@class='transparent icon info']"));
         private IWebElement _filterButton => _driver.FindElement(By.XPath("//button[@class='default white bordered']"));
         private IWebElement _timeRangeFromField => _driver.FindElement(By.XPath("//div/input[@name='date']"));
         private IWebElement _betAmountFromField => _driver.FindElement(By.XPath("//div/input[@class='bo-number-range-input']"));
@@ -79,7 +79,7 @@ namespace Exam.Pages
 
         public SettlementMonitorPage SearchEventByText()
         {
-            _searchEventField.SendKeys("ЦСКА");
+            _searchEventField.SendKeys("Авангард");
             _eventCheckbox.Click();
             return this;
         }
@@ -171,6 +171,20 @@ namespace Exam.Pages
             return element.Text;
         }
 
+        //public string GetBetAcceptTime()
+        //{
+        //    IWebElement element1 = _betAcceptTime;
+        //    string time = element1.Text;
+        //    IWebElement element2 = _betAcceptDate;
+        //    string date = element2.Text;
+        //    string acceptTime = date + " " + time;
+        //    Regex pattern1 = new Regex("\\.");
+        //    acceptTime = pattern1.Replace(acceptTime, "/");
+        //    Regex pattern2 = new Regex("19");
+        //    acceptTime = pattern2.Replace(acceptTime, "2019");
+        //    return acceptTime;
+        //}
+
         public string GetBetAcceptTime()
         {
             IWebElement element1 = _betAcceptTime;
@@ -178,10 +192,8 @@ namespace Exam.Pages
             IWebElement element2 = _betAcceptDate;
             string date = element2.Text;
             string acceptTime = date + " " + time;
-            Regex pattern1 = new Regex("\\.");
-            acceptTime = pattern1.Replace(acceptTime, "/");
-            Regex pattern2 = new Regex("19");
-            acceptTime = pattern2.Replace(acceptTime, "2019");
+            Regex pattern = new Regex("19");
+            acceptTime = pattern.Replace(acceptTime, "2019");
             return acceptTime;
         }
     }

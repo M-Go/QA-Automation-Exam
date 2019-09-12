@@ -1,4 +1,5 @@
 ﻿using Exam.DataProvider;
+using Exam.DataProvider.TestData;
 using Exam.Pages;
 using NUnit.Framework;
 using System;
@@ -22,17 +23,20 @@ namespace Exam.Tests
             //accessAllowed.Authorize();
         }
 
-        [Test]
-        public void FilterBetsByDate() //public void FilterBetsByDate(FilterProvider filteringData)
+        //[Test]
+        [TestCaseSource(typeof(FilteringTestData), nameof(FilteringTestData.GetFilteringData))]
+        public void FilterBetsByDate(FilterProvider filteringData) //public void FilterBetsByDate(FilterProvider filteringData)
         {
             _settlementMonitorPage = new SettlementMonitorPage();
             _settlementMonitorPage
                 .SelectDate()
                 .SearchEventByText()
                 .NavigateIntoEvent()
-                .FilterBetsByDate("27.08.2019 00:00:00"); //.FilterBetsByDate(filteringData.Date)
-        
-            Assert.That(DateTime.Parse(_settlementMonitorPage.GetBetAcceptTime()), Is.GreaterThan(DateTime.Parse("27/08/2019 00:00:00")));
+                //.FilterBetsByDate("27.08.2019 00:00:00");
+                .FilterBetsByDate(filteringData.Date);
+
+            //Assert.That(_settlementMonitorPage.GetBetAcceptTime(), Is.GreaterThan("27/08/2019 00:00:00"), "Date does not match");
+            Assert.That(_settlementMonitorPage.GetBetAcceptTime(), Is.GreaterThan(filteringData.Date), "Date does not match");
         }
 
         [Test]
@@ -46,8 +50,18 @@ namespace Exam.Tests
                 .NavigateIntoEvent()
                 .FilterBetsByDate("27.08.2019 00:00:00")
                 .NavigateToPlayerHistoryPage();
+            _playerHistoryPage = new PlayerHistoryPage();
 
             Assert.AreEqual("929297369", _playerHistoryPage.GetPlayerId(), "Player ID does not match");
         }
+
+        //[Test]
+        //Find betId via API
+        //var betRequest = new BetRequest();
+        //betRequest.GetBets();
+
+        //Check its channel
+        //Check its date
+
     }
 }

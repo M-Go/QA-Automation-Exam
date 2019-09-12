@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace Exam.DataProvider.TestData
 {
-    public static class EventsTestData
+    public static class FilteringTestData
     {
-        public static IEnumerable<TestCaseData> GetEventsData()
+        public static IEnumerable<TestCaseData> GetFilteringData()
         {
-            yield return new TestCaseData(new EventProvider());
+            yield return new TestCaseData(new FilterProvider());
         }
     }
 }
