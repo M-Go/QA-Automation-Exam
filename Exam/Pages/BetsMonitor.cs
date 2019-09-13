@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Exam.Pages
 {
-    class BetsMonitor
+    public class BetsMonitor
     {
     }
 }

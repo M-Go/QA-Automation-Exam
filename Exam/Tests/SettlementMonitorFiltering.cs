@@ -1,6 +1,7 @@
 ﻿using Exam.DataProvider;
 using Exam.DataProvider.TestData;
 using Exam.Pages;
+using Exam.Requests;
 using NUnit.Framework;
 using System;
 
@@ -54,6 +55,15 @@ namespace Exam.Tests
 
             Assert.AreEqual("929297369", _playerHistoryPage.GetPlayerId(), "Player ID does not match");
         }
+
+        [Test]
+        public void GetBetsViaAPI()
+        {
+            var betRequest = new BetsClient();
+            var a = betRequest.ReceiveBets();
+            Console.WriteLine(a);
+        }
+
 
         //[Test]
         //Find betId via API
