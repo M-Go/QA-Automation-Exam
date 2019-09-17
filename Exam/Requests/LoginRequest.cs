@@ -16,7 +16,7 @@ namespace Exam.Requests
             _login = new ApiClient("http://backoffice.kube.private");
         }
 
-        public void Authorize()
+        public string LoginToSettlementMonitor()
         {
             var response = _login.Post("/api/sso-operator/Login", "{\"includeAttributes\":[\"perm.*\"],\"userName\":\"admin@betlab\",\"password\":\"abc\"}"); //JsonConvert.SerializeObject(new LoginProvider()));
             if (!response.IsSuccessStatusCode)
@@ -25,7 +25,8 @@ namespace Exam.Requests
             }
             var result = response.Content.ReadAsStringAsync().Result;
             var resultJObject = JsonConvert.DeserializeObject<JObject>(result);
-            var token = resultJObject["token"];
+            var token = resultJObject["token"].ToString();
+            return token;
         }
     }
 }
