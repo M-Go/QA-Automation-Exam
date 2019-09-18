@@ -1,25 +1,34 @@
-﻿using OpenQA.Selenium;
+﻿using Exam.Utils;
+using OpenQA.Selenium;
 using System.Threading;
 
 namespace Exam.Session
 {
     public static class DriverManager
     {
-        public static readonly ThreadLocal<IWebDriver> _Driver = new ThreadLocal<IWebDriver>();
+        public static ThreadLocal<IWebDriver> Driver { get; set; } = new ThreadLocal<IWebDriver>();
 
-        public static void SetDriver(IWebDriver driver)
-        {
-            _Driver.Value = driver;
-        }
 
-        public static IWebDriver GetDriver()
-        {
-            return _Driver.Value;
-        }
+        //public static void SetDriver(IWebDriver driver)
+        //{
+        //    _Driver.Value = driver;
+        //}
+
+        //public static IWebDriver GetDriver()
+        //{
+        //    return _Driver.Value;
+        //}
 
         public static IJavaScriptExecutor GetJSExecutor()
         {
-            return (IJavaScriptExecutor)_Driver.Value;
+            return (IJavaScriptExecutor)Driver.Value;
+        }
+
+        public static void SetToken()
+        {
+            var token = TokenManager.GetToken();
+
+            //Driver.Cookie apply(token);
         }
     }
 }

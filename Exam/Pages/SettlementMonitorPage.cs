@@ -21,12 +21,12 @@ namespace Exam.Pages
         private IWebElement _timeRangeFromField => _driver.FindElement(By.XPath("//div/input[@name='date']"));
         private IWebElement _betAmountFromField => _driver.FindElement(By.XPath("//div/input[@class='bo-number-range-input']"));
         private IWebElement _segmentField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(.,'All segments')]"));
-        private IWebElement _noStatusSegment => _driver.FindElement(By.XPath("//span/span[contains(.,'Без статуса')]"));
+        private IWebElement _noStatusSegmentDropdown => _driver.FindElement(By.XPath("//span/span[contains(.,'Без статуса')]"));
         private IWebElement _channelField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(.,'All channels')]"));
-        private IWebElement _mobileChannel => _driver.FindElement(By.XPath("//span/span[contains(.,'Mobile')]"));
+        private IWebElement _mobileChannelDropdown => _driver.FindElement(By.XPath("//span/span[contains(.,'Mobile')]"));
         private IWebElement _filterForm => _driver.FindElement(By.XPath("//form[@class='event-bet-table-filter-form']"));
         private IWebElement _filteringConfirmButton => _driver.FindElement(By.XPath("//button[@class='warning raised']"));
-        private IWebElement _playerIdField => _driver.FindElement(By.XPath("//span[@class='player-profit-status bad']")); //td/div/div/a[@href]"));
+        private IWebElement _playerIdClickable => _driver.FindElement(By.XPath("//span[@class='player-profit-status bad']")); //td/div/div/a[@href]"));
 
         //assert fields
         private IWebElement _eventDescriptionEventsTree => _driver.FindElement(By.XPath("//label/span/span[last()]"));
@@ -102,10 +102,10 @@ namespace Exam.Pages
             _timeRangeFromField.SendKeys(date);
             _betAmountFromField.SendKeys("1");
             _segmentField.Click();
-            _noStatusSegment.Click();
+            _noStatusSegmentDropdown.Click();
             _filterForm.Click(); //click anywhere to close the dropdown
             _channelField.Click();
-            _mobileChannel.Click();
+            _mobileChannelDropdown.Click();
             _filterForm.Click(); //click anywhere to close the dropdown
             _filteringConfirmButton.Click();
             return this;
@@ -117,7 +117,7 @@ namespace Exam.Pages
 
         public SettlementMonitorPage NavigateToPlayerHistoryPage()
         {
-            _playerIdField.Click();
+            _playerIdClickable.Click();
             return this;
         }
 

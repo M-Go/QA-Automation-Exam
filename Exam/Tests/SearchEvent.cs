@@ -1,5 +1,5 @@
 ﻿using Exam.Pages;
-using Exam.Requests;
+using Exam.BackendSide;
 using Exam.Utils;
 using NUnit.Framework;
 
@@ -33,7 +33,7 @@ namespace Exam.Tests
         }
 
         [Test]
-        public void CheckThatEventIsFinished()
+        public void VerifyThatEventIsFinished()
         {
             _settlementMonitorPage = new SettlementMonitorPage();
             _settlementMonitorPage
@@ -45,7 +45,7 @@ namespace Exam.Tests
         }
 
         [Test]
-        public void CheckThatEventIsSettled()
+        public void VerifyThatEventIsSettled()
         {
             _settlementMonitorPage = new SettlementMonitorPage();
             _settlementMonitorPage

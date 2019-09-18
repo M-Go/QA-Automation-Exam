@@ -1,6 +1,6 @@
 ﻿namespace Exam.Models
 {
-    public class BetResponse
+    public class BetsResponse
     {
         public string Id { get; set; }
         public string AcceptTime { get; set; }

@@ -4,14 +4,14 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
 
-namespace Exam.Requests
+namespace Exam.BackendSide
 {
-    public class LoginRequest
+    public class LoginClient
     {
         private ApiClient _login;
         private string _token = TokenManager.GetToken();
 
-        public LoginRequest()
+        public LoginClient()
         {
             _login = new ApiClient("http://backoffice.kube.private");
         }
