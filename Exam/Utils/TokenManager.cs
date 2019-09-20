@@ -1,9 +1,4 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
-using Exam.DataProvider;
-using Exam.Models;
-using Exam.BackendSide;
+﻿using Exam.BackendSide;
 
 namespace Exam.Utils
 {

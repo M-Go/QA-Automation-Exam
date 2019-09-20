@@ -5,6 +5,6 @@ namespace Exam.Pages
 {
     public class _BasePage
     {
-        public IWebDriver _driver = DriverManager.GetDriver();
+        public IWebDriver _driver = DriverManager.Driver.Value;
     }
 }

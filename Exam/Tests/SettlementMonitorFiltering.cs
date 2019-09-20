@@ -7,13 +7,14 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using Exam.Session;
+using Exam.Utils;
 
 namespace Exam.Tests
 {
     [TestFixture]
     public class SettlementMonitorFiltering : _BaseUITest
     {
-        //private LoginPage _loginPage;
+        private LoginPage _loginPage;
         private SettlementMonitorPage _settlementMonitorPage;
         private PlayerHistoryPage _playerHistoryPage;
 
@@ -68,11 +69,23 @@ namespace Exam.Tests
         }
 
         [Test]
-        public void Test()
+        public void TestLoginToBsm()
         {
-            DriverManager.SetToken();
+            //_settlementMonitorPage = new SettlementMonitorPage();
+            //SettlementMonitorClient login = new SettlementMonitorClient();
+            //_settlementMonitorPage
+            //    .SelectDate()
+            //    .SearchEventByText()
+            //    .NavigateIntoEvent();
+            
             DriverManager.Driver.Value.Url = "http://backoffice.kube.private/monitors/settlement/";
-            //How no set token to driver (manager)
+            DriverManager.SetToken(TokenManager.GetToken());
+            _settlementMonitorPage = new SettlementMonitorPage();
+            _settlementMonitorPage
+                .SelectDate()
+                .SearchEventByText()
+                .NavigateIntoEvent();
+            //How no set token to driver(manager)
         }
     }
 }
