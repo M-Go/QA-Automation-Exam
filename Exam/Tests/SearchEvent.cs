@@ -1,5 +1,4 @@
 ﻿using Exam.Pages;
-using Exam.BackendSide;
 using Exam.Utils;
 using NUnit.Framework;
 
@@ -8,17 +7,13 @@ namespace Exam.Tests
     [TestFixture]
     public class SearchEvent : _BaseUITest
     {
-        private LoginPage _loginPage;
         private SettlementMonitorPage _settlementMonitorPage;
 
         [SetUp]
         public void BeforeTest()
         {
-            _loginPage = new LoginPage();
-            _loginPage.Login();
-
-            //var accessAllowed = new LoginRequest();
-            //accessAllowed.Authorize();
+            Login loginViaApi = new Login();
+            loginViaApi.LoginViaApi("/monitors/settlement/");
         }
 
         [Test]

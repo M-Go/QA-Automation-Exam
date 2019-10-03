@@ -1,4 +1,4 @@
-﻿using Exam.BackendSide;
+﻿using Exam.BackendClients;
 
 namespace Exam.Utils
 {
@@ -10,7 +10,6 @@ namespace Exam.Utils
         {
             if (string.IsNullOrEmpty(_token))
             {
-
                 _token = new SsoClient().GetSsoResponse().Token;
                 return _token;
             }

@@ -1,11 +1,9 @@
 ﻿using OpenQA.Selenium;
-using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Support.UI;
 using System.Text.RegularExpressions;
 
 namespace Exam.Pages
 {
-    public class SettlementMonitorPage : LoginPage
+    public class SettlementMonitorPage : _BasePage
     {      
         private IWebElement _dateField =>_driver.FindElement(By.XPath("//input[@placeholder='Выберите период']"));
         private IWebElement _searchEventField => _driver.FindElement(By.XPath("//div/input[@placeholder='Find event']"));

@@ -2,11 +2,9 @@
 using Exam.DataProvider.TestData;
 using Exam.Models;
 using Exam.Pages;
-using Exam.BackendSide;
+using Exam.BackendClients;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using Exam.Session;
 using Exam.Utils;
 
 namespace Exam.Tests
@@ -14,26 +12,20 @@ namespace Exam.Tests
     [TestFixture]
     public class SettlementMonitorFiltering : _BaseUITest
     {
-        private LoginPage _loginPage;
         private SettlementMonitorPage _settlementMonitorPage;
         private PlayerHistoryPage _playerHistoryPage;
 
         [SetUp]
         public void BeforeTest()
         {
-            //_loginPage = new LoginPage();
-            //_loginPage.Login();
-
-            //var login = new LoginClient();
-
-            //accessAllowed.Authorize();
+            Login loginViaApi = new Login();
+            loginViaApi.LoginViaApi("/monitors/settlement/");
         }
 
         [Test]
-        public void NavigateToPlayerHistory()
+        public void NavigateToPlayerHistoryFromSettlementMonitor()
         {
             _settlementMonitorPage = new SettlementMonitorPage();
-            //_playerHistoryPage = new PlayerHistoryPage();
             _settlementMonitorPage
                 .SelectDate()
                 .SearchEventByText()
@@ -58,34 +50,14 @@ namespace Exam.Tests
             Assert.That(_settlementMonitorPage.GetBetAcceptTime(), Is.GreaterThan(filteringData.Date), "Date does not match");
         }
 
-        [Test]
-        public void VerifyBetChannel()
+        [TestCaseSource(typeof(FilteringTestData), nameof(FilteringTestData.GetFilteringData))]
+        public void VerifyBetChannel(FilterProvider filteringData)
         {
             BetsClient betRequest = new BetsClient();
-            List<BetsResponse> betModel = betRequest.GetBets();
-            string channel = betModel[0].Channel;
+            List<BetsResponse> betsResponse = betRequest.GetBets(filteringData.FilteringBodyInSettlementMonitor);
+            string channel = betsResponse[0].Channel;
 
             Assert.AreEqual("MOBILE_WEB", channel, "Channel does not match");
-        }
-
-        [Test]
-        public void TestLoginToBsm()
-        {
-            //_settlementMonitorPage = new SettlementMonitorPage();
-            //SettlementMonitorClient login = new SettlementMonitorClient();
-            //_settlementMonitorPage
-            //    .SelectDate()
-            //    .SearchEventByText()
-            //    .NavigateIntoEvent();
-            
-            DriverManager.Driver.Value.Url = "http://backoffice.kube.private/monitors/settlement/";
-            DriverManager.SetToken(TokenManager.GetToken());
-            _settlementMonitorPage = new SettlementMonitorPage();
-            _settlementMonitorPage
-                .SelectDate()
-                .SearchEventByText()
-                .NavigateIntoEvent();
-            //How no set token to driver(manager)
         }
     }
 }

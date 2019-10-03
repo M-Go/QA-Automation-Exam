@@ -1,13 +1,10 @@
 ﻿using OpenQA.Selenium;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Exam.Pages
 {
     public class PlayerHistoryPage : _BasePage
     {
-        private IWebElement _playerIdField => _driver.FindElement(By.CssSelector(".player-brief-attribute.accountNumber")); //"//span[@class='player-brief-attribute accountNumber']"));
+        private IWebElement _playerIdField => _driver.FindElement(By.CssSelector(".player-brief-attribute.accountNumber"));
 
         public PlayerHistoryPage()
         {

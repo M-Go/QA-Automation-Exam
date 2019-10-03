@@ -1,4 +1,5 @@
 ﻿using Exam.Pages;
+using Exam.Utils;
 using NUnit.Framework;
 
 namespace Exam.Tests
@@ -6,17 +7,13 @@ namespace Exam.Tests
     [TestFixture]
     public class VerifyBetLogsPopup : _BaseUITest
     {
-        private LoginPage _loginPage;
         private SettlementMonitorPage _settlementMonitorPage;
 
         [SetUp]
         public void BeforeTest()
         {
-            _loginPage = new LoginPage();
-            _loginPage.Login();
-
-            //var accessAllowed = new LoginRequest();
-            //accessAllowed.Authorize();
+            Login loginViaApi = new Login();
+            loginViaApi.LoginViaApi("/monitors/settlement/");
         }
 
         [Test]

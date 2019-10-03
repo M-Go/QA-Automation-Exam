@@ -2,10 +2,8 @@
 using Exam.Utils;
 using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace Exam.BackendSide
+namespace Exam.BackendClients
 {
     public class SsoClient
     {

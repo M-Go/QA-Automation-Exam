@@ -19,7 +19,7 @@ namespace Exam.Tests
             var driver = DriverManager.Driver.Value;
             if (driver != null)
             {
-                driver.Close();
+                driver.Quit();
             }
         }
     }
