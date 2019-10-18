@@ -48,7 +48,8 @@ namespace Exam.Pages
             _dateField.Click();
             _dateField.Clear();
             _dateField.SendKeys("01.09.19 - 07.09.19");
-            _searchEventField.Click(); //click anywhere to close the datepicker
+            _dateField.SendKeys(Keys.Enter);
+            //_searchEventField.Click(); //click anywhere to close the datepicker
             return this;
         }
 

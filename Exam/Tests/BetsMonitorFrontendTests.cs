@@ -5,14 +5,13 @@ using Exam.Models;
 using Exam.Pages;
 using Exam.Utils;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 
 namespace Exam.Tests
 {
     [TestFixture]
-    public class BetsMonitorFrontendTests
+    public class BetsMonitorFrontendTests : _BaseUITest
     {
         private BetsMonitorPage _betsMonitorPage;
         private PlayerHistoryPage _playerHistoryPage;
@@ -24,30 +23,44 @@ namespace Exam.Tests
             loginViaApi.LoginViaApi("/monitors/bets/");
         }
 
-        [Test]
-        public void NavigateToPlayerHistoryFromBetsMonitor()
+        [TestCaseSource(typeof(FilteringTestData), nameof(FilteringTestData.GetFilteringData))]
+        public void NavigateToPlayerHistoryFromBetsMonitor(FilterProvider filteringData)
         {
             _betsMonitorPage = new BetsMonitorPage();
             _betsMonitorPage
-                .FilterBetsByAcceptTimeAndPlayerId("27.08.2019 00:00:00", "929297369")
+                .FilterBetsByAcceptTimeAndPlayerId(filteringData.Date, filteringData.PlayerId)
                 .NavigateToPlayerHistoryPage();
             _playerHistoryPage = new PlayerHistoryPage();
 
-            Assert.AreEqual("929297369", _playerHistoryPage.GetPlayerId(), "Player ID does not match");
+            Assert.AreEqual(filteringData.PlayerId, _playerHistoryPage.GetPlayerId(), "Player ID does not match");
         }
 
         [TestCaseSource(typeof(FilteringTestData), nameof(FilteringTestData.GetFilteringData))]
         public void VerifyEventNames(FilterProvider filteringData)
         {
+            BetsClient betRequest = new BetsClient();
+            List<BetsResponse> betsResponse = betRequest.GetBets(filteringData.FilteringBodyInBetsMonitor);
+            var allEventNamesFromResponse = from bet in betsResponse select bet.EventName;
+            var validEventNamesFromResponse = allEventNamesFromResponse.Where(name => name != null).ToList();
+
             _betsMonitorPage = new BetsMonitorPage();
             _betsMonitorPage
                 .FilterBetsByAcceptTimeAndPlayerId(filteringData.Date, filteringData.PlayerId);
 
+            var allEventNamesFromUi = _betsMonitorPage.GetEventNames();
+            var validEventNamesFromUi = allEventNamesFromResponse.Where(name => name != null).ToList();
 
-            BetsClient betRequest = new BetsClient();
-            List<BetsResponse> betsResponse = betRequest.GetBets(filteringData.FilteringBodyInBetsMonitor);
-            //List<string> playerIds = new List<string>();
-            var ids = from bet in betsResponse select bet.PlayerId;
+
+            //bool eventNamesComparisonResult = Enumerable.SequenceEqual(allEventNamesFromResponse, allEventNamesFromUi);
+
+            CollectionAssert.AreEqual(validEventNamesFromResponse, validEventNamesFromUi, "Event names do not match");
+            //IsTrue(eventNamesComparisonResult, "Event names do not match");
+
+
+            //Compare events amount
+
+            ////List<string> playerIds = new List<string>();
+            //var ids = from bet in betsResponse select bet.PlayerId;
 
             //int betsCount = betsResponse.Count();
 
@@ -69,11 +82,6 @@ namespace Exam.Tests
             //    playerIds.Add(betsResponse[i].PlayerId);
             //}
             //    Console.WriteLine(ids);
-
-
-
-            //    Assert.AreEqual("929297369", actualPlayerIdsDist, "Player IDs do not match");
-            //}
         }
     }
 }

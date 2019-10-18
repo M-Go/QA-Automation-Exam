@@ -2,7 +2,6 @@
 using Exam.DataProvider;
 using Exam.DataProvider.TestData;
 using Exam.Models;
-using Exam.Pages;
 using Exam.Utils;
 using NUnit.Framework;
 using System;
@@ -14,9 +13,6 @@ namespace Exam.Tests
     [TestFixture]
     public class BetsMonitorBackendTests : _BaseUITest
     {
-        private BetsMonitorPage _betsMonitorPage;
-        private PlayerHistoryPage _playerHistoryPage;
-
         [SetUp]
         public void BeforeTest()
         {
