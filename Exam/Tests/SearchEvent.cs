@@ -33,8 +33,7 @@ namespace Exam.Tests
             _settlementMonitorPage = new SettlementMonitorPage();
             _settlementMonitorPage
                 .SelectDate()
-                .SelectEventInEventsTree()
-                .SelectFinishedEvents();
+                .SelectEventInEventsTree();
 
             Assert.AreEqual("Finished", _settlementMonitorPage.GetEventStageStatus(), "Event stage does not match");
         }
@@ -45,8 +44,7 @@ namespace Exam.Tests
             _settlementMonitorPage = new SettlementMonitorPage();
             _settlementMonitorPage
                 .SelectDate()
-                .SelectEventInEventsTree()
-                .SelectFinishedEvents();
+                .SelectEventInEventsTree();
 
             Assert.AreEqual("Settled", _settlementMonitorPage.GetEventSettlementStatus(), "Event settlement status does not match");
         }

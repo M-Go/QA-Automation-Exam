@@ -23,8 +23,9 @@ namespace Exam.Tests
         [TestCaseSource(typeof(FilteringTestData), nameof(FilteringTestData.GetFilteringData))]
         public void VerifyPlayerIds(FilterProvider filteringData)
         {
-            BetsClient betRequest = new BetsClient();
-            List<BetsResponse> betsResponse = betRequest.GetBets(filteringData.FilteringBodyInBetsMonitor);            
+            BetsClient client = new BetsClient();
+
+            List<BetsResponse> betsResponse = client.GetBets(filteringData.FilteringBodyInBetsMonitor);            
             var allPlayerIds = from bet in betsResponse select bet.PlayerId; //Distinct();
             bool playerIdComparisonResult = allPlayerIds.All(playerId => playerId.Equals(playerId));
 

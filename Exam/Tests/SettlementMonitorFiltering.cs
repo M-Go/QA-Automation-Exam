@@ -30,7 +30,7 @@ namespace Exam.Tests
                 .SelectDate()
                 .SearchEventByText()
                 .NavigateIntoEvent()
-                .FilterBetsByDate("27.08.2019 00:00:00")
+                .FilterBetsByDate("31.10.2019 00:00:00")
                 .NavigateToPlayerHistoryPage();
             _playerHistoryPage = new PlayerHistoryPage();
 

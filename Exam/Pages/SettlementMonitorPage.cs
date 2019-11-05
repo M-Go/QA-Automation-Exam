@@ -1,29 +1,29 @@
 ﻿using OpenQA.Selenium;
+using System;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace Exam.Pages
 {
     public class SettlementMonitorPage : _BasePage
     {      
         private IWebElement _dateField =>_driver.FindElement(By.XPath("//input[@placeholder='Выберите период']"));
-        private IWebElement _searchEventField => _driver.FindElement(By.XPath("//div/input[@placeholder='Find event']"));
+        private IWebElement _searchEventField => _driver.FindElement(By.CssSelector(".event-search-input-wrapper input"));
         private IWebElement _selectSportType => _driver.FindElement(By.XPath("(//label[@class='title'][contains(., 'Хоккей')])"));
         private IWebElement _selectCategory => _driver.FindElement(By.XPath("//div/section/ul/li/ul[@class='event-tree'][last()]"));
         private IWebElement _selectTournament => _driver.FindElement(By.XPath("//div/section/ul/li/ul/li/ul[@class='event-tree'][last()]"));
         private IWebElement _eventCheckbox => _driver.FindElement(By.XPath("//span[@class='material-icons'][1]"));
-        private IWebElement _eventStageField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(., 'All event stages')]"));
-        private IWebElement _eventStageFinished => _driver.FindElement(By.XPath("//div/ul/li[@class='multiselect__element'][contains(., 'Finished')]"));
         private IWebElement _eventRow => _driver.FindElement(By.XPath("//div[@class='alert-item']"));
         private IWebElement _betLogsButton => _driver.FindElement(By.XPath("//button[@class='transparent icon info']"));
-        private IWebElement _filterButton => _driver.FindElement(By.XPath("//button[@class='default white bordered']"));
+        private IWebElement _filterButton => _driver.FindElement(By.CssSelector(".event-bet-table-filter-wrapper button :nth-child(1)"));
         private IWebElement _timeRangeFromField => _driver.FindElement(By.XPath("//div/input[@name='date']"));
         private IWebElement _betAmountFromField => _driver.FindElement(By.XPath("//div/input[@class='bo-number-range-input']"));
-        private IWebElement _segmentField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(.,'All segments')]"));
+        private IWebElement _segmentField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(.,'Все сегменты')]"));
         private IWebElement _noStatusSegmentDropdown => _driver.FindElement(By.XPath("//span/span[contains(.,'Без статуса')]"));
-        private IWebElement _channelField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(.,'All channels')]"));
-        private IWebElement _mobileChannelDropdown => _driver.FindElement(By.XPath("//span/span[contains(.,'Mobile')]"));
+        private IWebElement _channelField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(.,'Все каналы')]"));
+        private IWebElement _desktopChannelDropdown => _driver.FindElement(By.XPath("//span/span[contains(.,'Desktop')]"));
         private IWebElement _filterForm => _driver.FindElement(By.XPath("//form[@class='event-bet-table-filter-form']"));
-        private IWebElement _filteringConfirmButton => _driver.FindElement(By.XPath("//button[@class='warning raised']"));
+        private IWebElement _filteringConfirmButton => _driver.FindElement(By.CssSelector(".event-bet-table-filter-button-wrapper :nth-child(2)"));
         private IWebElement _playerIdClickable => _driver.FindElement(By.XPath("//span[@class='player-profit-status bad']")); //td/div/div/a[@href]"));
 
         //assert fields
@@ -47,9 +47,8 @@ namespace Exam.Pages
         {
             _dateField.Click();
             _dateField.Clear();
-            _dateField.SendKeys("01.09.19 - 07.09.19");
+            _dateField.SendKeys("30.10.19 - 31.10.19");
             _dateField.SendKeys(Keys.Enter);
-            //_searchEventField.Click(); //click anywhere to close the datepicker
             return this;
         }
 
@@ -62,23 +61,9 @@ namespace Exam.Pages
             return this;
         }
 
-        public SettlementMonitorPage SelectFinishedEvents()
-        {
-            _eventStageField.Click();
-            _eventStageFinished.Click();
-            _searchEventField.Click(); //click anywhere to close the dropdown
-            return this;
-
-            //does not work select from dropdown
-            //IWebElement selectEventStage = _eventStageField;
-            //SelectElement dropdownEventStage = new SelectElement(selectEventStage);
-            //dropdownEventStage.SelectByValue("Finished");
-            //return this;
-        }
-
         public SettlementMonitorPage SearchEventByText()
         {
-            _searchEventField.SendKeys("Авангард");
+            _searchEventField.SendKeys("ЦСКА");
             _eventCheckbox.Click();
             return this;
         }
@@ -97,6 +82,7 @@ namespace Exam.Pages
 
         public SettlementMonitorPage FilterBetsByDate(string date)
         {
+            //Thread.Sleep(TimeSpan.FromSeconds(4)); //To wait element on the page
             _filterButton.Click();
             _timeRangeFromField.SendKeys(date);
             _betAmountFromField.SendKeys("1");
@@ -104,7 +90,7 @@ namespace Exam.Pages
             _noStatusSegmentDropdown.Click();
             _filterForm.Click(); //click anywhere to close the dropdown
             _channelField.Click();
-            _mobileChannelDropdown.Click();
+            _desktopChannelDropdown.Click();
             _filterForm.Click(); //click anywhere to close the dropdown
             _filteringConfirmButton.Click();
             return this;

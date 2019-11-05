@@ -7,7 +7,7 @@ namespace Exam.DataProvider
     {
         public string PlayerId => "929297369";
 
-        public string Date => "27.08.2019 00:00:00";
+        public string Date => "28.10.2019 00:00:00";
 
         public DateTime AcceptTimeFiltering = new DateTime(2019, 08, 26, 21, 00, 00);
 
