@@ -1,7 +1,5 @@
 ﻿using OpenQA.Selenium;
-using System;
 using System.Text.RegularExpressions;
-using System.Threading;
 
 namespace Exam.Pages
 {
@@ -21,7 +19,7 @@ namespace Exam.Pages
         private IWebElement _segmentField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(.,'Все сегменты')]"));
         private IWebElement _noStatusSegmentDropdown => _driver.FindElement(By.XPath("//span/span[contains(.,'Без статуса')]"));
         private IWebElement _channelField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(.,'Все каналы')]"));
-        private IWebElement _desktopChannelDropdown => _driver.FindElement(By.XPath("//span/span[contains(.,'Desktop')]"));
+        private IWebElement _mobileChannelDropdown => _driver.FindElement(By.XPath("//span/span[contains(.,'Mobile')]"));
         private IWebElement _filterForm => _driver.FindElement(By.XPath("//form[@class='event-bet-table-filter-form']"));
         private IWebElement _filteringConfirmButton => _driver.FindElement(By.CssSelector(".event-bet-table-filter-button-wrapper :nth-child(2)"));
         private IWebElement _playerIdClickable => _driver.FindElement(By.XPath("//span[@class='player-profit-status bad']")); //td/div/div/a[@href]"));
@@ -43,11 +41,11 @@ namespace Exam.Pages
             _driver.Url = "http://backoffice.kube.private/monitors/settlement";
         }
 
-        public SettlementMonitorPage SelectDate()
+        public SettlementMonitorPage SelectDate(string date)
         {
             _dateField.Click();
             _dateField.Clear();
-            _dateField.SendKeys("30.10.19 - 31.10.19");
+            _dateField.SendKeys(date);
             _dateField.SendKeys(Keys.Enter);
             return this;
         }
@@ -61,9 +59,9 @@ namespace Exam.Pages
             return this;
         }
 
-        public SettlementMonitorPage SearchEventByText()
+        public SettlementMonitorPage SearchEventByText(string text)
         {
-            _searchEventField.SendKeys("ЦСКА");
+            _searchEventField.SendKeys(text);
             _eventCheckbox.Click();
             return this;
         }
@@ -80,22 +78,23 @@ namespace Exam.Pages
             return this;
         }
 
-        public SettlementMonitorPage FilterBetsByDate(string date)
+        //TODO Improve method, make it more flexible
+        public SettlementMonitorPage FilterBets(string date, string amount)
         {
             //Thread.Sleep(TimeSpan.FromSeconds(4)); //To wait element on the page
             _filterButton.Click();
             _timeRangeFromField.SendKeys(date);
-            _betAmountFromField.SendKeys("1");
+            _betAmountFromField.SendKeys(amount);
             _segmentField.Click();
             _noStatusSegmentDropdown.Click();
             _filterForm.Click(); //click anywhere to close the dropdown
             _channelField.Click();
-            _desktopChannelDropdown.Click();
+            _mobileChannelDropdown.Click();
             _filterForm.Click(); //click anywhere to close the dropdown
             _filteringConfirmButton.Click();
             return this;
 
-            //does not work select from dropdown
+            //select from dropdown does not work
             //SelectElement selectSegment = new SelectElement(_segmentField);
             //selectSegment.SelectByValue("Без статуса");
         }
@@ -155,20 +154,6 @@ namespace Exam.Pages
             IWebElement element = _betResultPopup;
             return element.Text;
         }
-
-        //public string GetBetAcceptTime()
-        //{
-        //    IWebElement element1 = _betAcceptTime;
-        //    string time = element1.Text;
-        //    IWebElement element2 = _betAcceptDate;
-        //    string date = element2.Text;
-        //    string acceptTime = date + " " + time;
-        //    Regex pattern1 = new Regex("\\.");
-        //    acceptTime = pattern1.Replace(acceptTime, "/");
-        //    Regex pattern2 = new Regex("19");
-        //    acceptTime = pattern2.Replace(acceptTime, "2019");
-        //    return acceptTime;
-        //}
 
         public string GetBetAcceptTime()
         {

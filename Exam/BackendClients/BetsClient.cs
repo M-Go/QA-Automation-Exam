@@ -1,4 +1,5 @@
 ﻿using Exam.Models;
+using Exam.Models.Filtering;
 using Exam.Utils;
 using Newtonsoft.Json;
 using System;
@@ -16,9 +17,11 @@ namespace Exam.BackendClients
             _backoffice.SetToken(TokenManager.GetToken());
         }
 
-        public List<BetsResponse> GetBets(string bodyJson)
+        public List<BetsResponse> GetBets(FilteringRequest request)
         {
-            var response = _backoffice.Post("/api/betview-service/bets/", bodyJson);
+
+            var jsonBody = JsonConvert.SerializeObject(request);
+            var response = _backoffice.Post("/api/betview-service/bets/", jsonBody);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Cannot get bets");

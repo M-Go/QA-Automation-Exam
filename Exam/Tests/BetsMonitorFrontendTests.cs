@@ -2,6 +2,7 @@
 using Exam.DataProvider;
 using Exam.DataProvider.TestData;
 using Exam.Models;
+using Exam.Models.Filtering;
 using Exam.Pages;
 using Exam.Utils;
 using NUnit.Framework;
@@ -35,11 +36,24 @@ namespace Exam.Tests
             Assert.AreEqual(filteringData.PlayerId, _playerHistoryPage.GetPlayerId(), "Player ID does not match");
         }
 
-        [TestCaseSource(typeof(FilteringTestData), nameof(FilteringTestData.GetFilteringData))]
-        public void VerifyEventNames(FilterProvider filteringData)
+        [TestCase(0, "MOBILE_WEB", "2019 -08-26T21:00:00.000Z")]
+        public void VerifyEventNames(int segment, string channel, string acceptTime)
         {
-            BetsClient betRequest = new BetsClient();
-            List<BetsResponse> betsResponse = betRequest.GetBets(filteringData.FilteringBodyInBetsMonitor);
+            BetsClient client = new BetsClient();
+            FilteringRequest betsRequest = new FilteringRequest();
+            InFilterModel inFilter = new InFilterModel();
+            var segments = new[] { segment };
+            inFilter.SegmentIds = segments;
+            var channels = new[] { channel };           
+            inFilter.Channels = channels;
+            betsRequest.InFilter = inFilter;
+
+            //oDataFilter\":\"(eventId eq '520012') and (acceptTime ge 2019-08-26T21:00:00.000Z) and (acceptTime lt 2019-09-13T11:00:53.672Z) and (betBaseAmount ge 1)
+            betsRequest.ODataFilter = $"(acceptTime ge {acceptTime})";
+            betsRequest.Take = 50;
+            List<BetsResponse> betsResponse = client.GetBets(betsRequest);
+
+            
             var allEventNamesFromResponse = from bet in betsResponse select bet.EventName;
             var validEventNamesFromResponse = allEventNamesFromResponse.Where(name => name != null).ToList();
 

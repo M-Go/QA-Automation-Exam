@@ -1,7 +1,6 @@
 ﻿using Exam.BackendClients;
-using Exam.DataProvider;
-using Exam.DataProvider.TestData;
 using Exam.Models;
+using Exam.Models.Filtering;
 using Exam.Utils;
 using NUnit.Framework;
 using System;
@@ -20,26 +19,42 @@ namespace Exam.Tests
             loginViaApi.LoginViaApi("/monitors/bets/");
         }
 
-        [TestCaseSource(typeof(FilteringTestData), nameof(FilteringTestData.GetFilteringData))]
-        public void VerifyPlayerIds(FilterProvider filteringData)
+        [TestCase("929297369", "2019-08-26T21:00:00.000Z")]
+        [TestCase("005097235", "2019-11-07T21:00:00.000Z")]
+        public void VerifyPlayerIds(string playerId, string acceptTime)
         {
             BetsClient client = new BetsClient();
-
-            List<BetsResponse> betsResponse = client.GetBets(filteringData.FilteringBodyInBetsMonitor);            
+            FilteringRequest betsRequest = new FilteringRequest();
+            InFilterModel inFilter = new InFilterModel();
+            var playerIds = new  [] {playerId};
+            inFilter.PlayerIds = playerIds;
+            betsRequest.InFilter = inFilter;
+            betsRequest.ODataFilter = $"(acceptTime ge {acceptTime})";            
+            betsRequest.Take = 50;
+            List<BetsResponse> betsResponse = client.GetBets(betsRequest);
             var allPlayerIds = from bet in betsResponse select bet.PlayerId; //Distinct();
-            bool playerIdComparisonResult = allPlayerIds.All(playerId => playerId.Equals(playerId));
+            bool playerIdComparisonResult = allPlayerIds.All(id => id.Equals(playerId));
 
             Assert.IsTrue(playerIdComparisonResult, "Player IDs do not match");
         }
 
-        [TestCaseSource(typeof(FilteringTestData), nameof(FilteringTestData.GetFilteringData))]
-        public void VerifyBetDates(FilterProvider filteringData)
+        [TestCase("929297369", "2019-08-26T21:00:00.000Z")]
+        [TestCase("005097235", "2019-11-07T21:00:00.000Z")]
+        public void VerifyBetDates(string playerId, string betTime)
         {
-            BetsClient betRequest = new BetsClient();
-            List<BetsResponse> betsResponse = betRequest.GetBets(filteringData.FilteringBodyInBetsMonitor);
+            BetsClient client = new BetsClient();
+            FilteringRequest betsRequest = new FilteringRequest();
+            InFilterModel inFilter = new InFilterModel();
+            var playerIds = new[] { playerId };
+            inFilter.PlayerIds = playerIds;
+            betsRequest.InFilter = inFilter;
+            betsRequest.ODataFilter = $"(acceptTime ge {betTime})";
+            betsRequest.Take = 50;
+            List<BetsResponse> betsResponse = client.GetBets(betsRequest);
             var allAcceptTimes = from bet in betsResponse select bet.AcceptTime;
-            var allAcceptTimesInDateTime = allAcceptTimes.Select(acceptTime => DateTime.Parse(acceptTime));
-            bool dateComparisonResult = allAcceptTimesInDateTime.All(acceptTime => acceptTime > filteringData.AcceptTimeFiltering);
+            DateTime givenAcceptTime = DateTime.Parse(betTime);
+            var allAcceptTimesInDateTime = allAcceptTimes.Select(time => DateTime.Parse(time));
+            bool dateComparisonResult = allAcceptTimesInDateTime.All(time => time > givenAcceptTime);
 
             Assert.IsTrue(dateComparisonResult, "Bet date does not match");
         }

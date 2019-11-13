@@ -1,11 +1,10 @@
-﻿using Exam.DataProvider;
-using Exam.DataProvider.TestData;
-using Exam.Models;
+﻿using Exam.Models;
 using Exam.Pages;
 using Exam.BackendClients;
 using NUnit.Framework;
 using System.Collections.Generic;
 using Exam.Utils;
+using Exam.Models.Filtering;
 
 namespace Exam.Tests
 {
@@ -22,42 +21,51 @@ namespace Exam.Tests
             loginViaApi.LoginViaApi("/monitors/settlement/");
         }
 
-        [Test]
-        public void NavigateToPlayerHistoryFromSettlementMonitor()
+        [TestCase("28.08.19 - 03.09.19", "ЦСКА", "27.08.2019 00:00:00", "1", "929297369")]
+        public void NavigateToPlayerHistoryFromSettlementMonitor(string eventsDate, string text, string betsDate, string betsAmount, string playerId)
         {
             _settlementMonitorPage = new SettlementMonitorPage();
             _settlementMonitorPage
-                .SelectDate()
-                .SearchEventByText()
+                .SelectDate(eventsDate)
+                .SearchEventByText(text)
                 .NavigateIntoEvent()
-                .FilterBetsByDate("31.10.2019 00:00:00")
+                .FilterBets(betsDate, betsAmount)
                 .NavigateToPlayerHistoryPage();
             _playerHistoryPage = new PlayerHistoryPage();
 
-            Assert.AreEqual("929297369", _playerHistoryPage.GetPlayerId(), "Player ID does not match");
+            Assert.AreEqual(playerId, _playerHistoryPage.GetPlayerId(), "Player ID does not match");
         }
 
-        [TestCaseSource(typeof(FilteringTestData), nameof(FilteringTestData.GetFilteringData))]
-        public void VerifyBetDate(FilterProvider filteringData)
+        [TestCase("28.08.19 - 03.09.19", "ЦСКА", "27.08.2019 00:00:00", "1")]
+        public void VerifyBetDate(string eventsDate, string text, string betsDate, string betsAmount)
         {
             _settlementMonitorPage = new SettlementMonitorPage();
             _settlementMonitorPage
-                .SelectDate()
-                .SearchEventByText()
+                .SelectDate(eventsDate)
+                .SearchEventByText(text)
                 .NavigateIntoEvent()
-                .FilterBetsByDate(filteringData.Date);
+                .FilterBets(betsDate, betsAmount);
 
-            Assert.That(_settlementMonitorPage.GetBetAcceptTime(), Is.GreaterThan(filteringData.Date), "Date does not match");
+            Assert.That(_settlementMonitorPage.GetBetAcceptTime(), Is.GreaterThan(betsDate), "Date does not match");
         }
 
-        [TestCaseSource(typeof(FilteringTestData), nameof(FilteringTestData.GetFilteringData))]
-        public void VerifyBetChannel(FilterProvider filteringData)
+        [TestCase(0, "MOBILE_WEB", "520012", "2019-08-26T21:00:00.000Z", "2019-09-13T11:00:53.672Z", "1")]
+        public void VerifyBetChannel(int segment, string channel, string eventId, string acceptTimeGreaterOrEqual, string acceptTimeLessThan, string betsAmount)
         {
             BetsClient betRequest = new BetsClient();
-            List<BetsResponse> betsResponse = betRequest.GetBets(filteringData.FilteringBodyInSettlementMonitor);
-            string channel = betsResponse[0].Channel;
+            FilteringRequest betsRequest = new FilteringRequest();
+            InFilterModel inFilter = new InFilterModel();
+            var segments = new[] { segment };
+            inFilter.SegmentIds = segments;
+            var channels = new[] { channel };
+            inFilter.Channels = channels;
+            betsRequest.InFilter = inFilter;
+            betsRequest.ODataFilter = $"(eventId eq '{eventId}') and (acceptTime ge {acceptTimeGreaterOrEqual}) and (acceptTime lt {acceptTimeLessThan}) and (betBaseAmount ge {betsAmount})";
+            betsRequest.Take = 50;
+            List<BetsResponse> betsResponse = betRequest.GetBets(betsRequest);
+            string channelFromResponse = betsResponse[0].Channel;
 
-            Assert.AreEqual("MOBILE_WEB", channel, "Channel does not match");
+            Assert.AreEqual(channel, channelFromResponse, "Channel does not match");
         }
     }
 }

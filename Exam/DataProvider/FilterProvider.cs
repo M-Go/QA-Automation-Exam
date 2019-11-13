@@ -13,7 +13,7 @@ namespace Exam.DataProvider
 
         public string FilteringBodyInSettlementMonitor => "{\"inFilter\":{\"segmentIds\":[0],\"channels\":[\"MOBILE_WEB\"]},\"oDataFilter\":\"(eventId eq '520012') and (acceptTime ge 2019-08-26T21:00:00.000Z) and (acceptTime lt 2019-09-13T11:00:53.672Z) and (betBaseAmount ge 1)\",\"take\":50}";
 
-        public string FilteringBodyInBetsMonitor => "{\"inFilter\":{\"playerIds\":[\"929297369\"]},\"oDataFilter\":\"(acceptTime ge 2019-08-26T21:00:00.000Z)\",\"take\":50}";
+        //public string FilteringBodyInBetsMonitor => "{\"inFilter\":{\"playerIds\":[\"929297369\"]},\"oDataFilter\":\"(acceptTime ge 2019-08-26T21:00:00.000Z)\",\"take\":50}";
 
     }
 }
