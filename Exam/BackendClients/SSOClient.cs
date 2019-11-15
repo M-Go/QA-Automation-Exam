@@ -14,15 +14,16 @@ namespace Exam.BackendClients
             _baseClient = new ApiClient("http://backoffice.kube.private");
         }
 
-        public LoginResponse GetSsoResponse()
+        public LoginResponseModel GetSsoResponse(LoginRequestModel request)
         {
-            var response = _baseClient.Post("api/sso-operator/Login", "{\"includeAttributes\":[\"perm.*\"],\"userName\":\"admin@betlab\",\"password\":\"abc\"}"); //JsonConvert.SerializeObject(new LoginProvider()));
+            var jsonBody = JsonConvert.SerializeObject(request);
+            var response = _baseClient.Post("api/sso-operator/Login", jsonBody);
             if (!response.IsSuccessStatusCode)
             {
                 throw new Exception("Authorization failed");
             }
             var result = response.Content.ReadAsStringAsync().Result;
-            LoginResponse resultJObject = JsonConvert.DeserializeObject<LoginResponse>(result);
+            LoginResponseModel resultJObject = JsonConvert.DeserializeObject<LoginResponseModel>(result);
             string token = resultJObject.Token.ToString();
             return resultJObject;
         }

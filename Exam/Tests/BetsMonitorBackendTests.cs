@@ -24,15 +24,15 @@ namespace Exam.Tests
         public void VerifyPlayerIds(string playerId, string acceptTime)
         {
             BetsClient client = new BetsClient();
-            FilteringRequest betsRequest = new FilteringRequest();
+            FilteringRequestModel betsRequest = new FilteringRequestModel();
             InFilterModel inFilter = new InFilterModel();
             var playerIds = new  [] {playerId};
             inFilter.PlayerIds = playerIds;
             betsRequest.InFilter = inFilter;
             betsRequest.ODataFilter = $"(acceptTime ge {acceptTime})";            
             betsRequest.Take = 50;
-            List<BetsResponse> betsResponse = client.GetBets(betsRequest);
-            var allPlayerIds = from bet in betsResponse select bet.PlayerId; //Distinct();
+            List<BetsResponseModel> betsResponse = client.GetBets(betsRequest);
+            var allPlayerIds = from bet in betsResponse select bet.PlayerId;
             bool playerIdComparisonResult = allPlayerIds.All(id => id.Equals(playerId));
 
             Assert.IsTrue(playerIdComparisonResult, "Player IDs do not match");
@@ -43,14 +43,14 @@ namespace Exam.Tests
         public void VerifyBetDates(string playerId, string betTime)
         {
             BetsClient client = new BetsClient();
-            FilteringRequest betsRequest = new FilteringRequest();
+            FilteringRequestModel betsRequest = new FilteringRequestModel();
             InFilterModel inFilter = new InFilterModel();
             var playerIds = new[] { playerId };
             inFilter.PlayerIds = playerIds;
             betsRequest.InFilter = inFilter;
             betsRequest.ODataFilter = $"(acceptTime ge {betTime})";
             betsRequest.Take = 50;
-            List<BetsResponse> betsResponse = client.GetBets(betsRequest);
+            List<BetsResponseModel> betsResponse = client.GetBets(betsRequest);
             var allAcceptTimes = from bet in betsResponse select bet.AcceptTime;
             DateTime givenAcceptTime = DateTime.Parse(betTime);
             var allAcceptTimesInDateTime = allAcceptTimes.Select(time => DateTime.Parse(time));

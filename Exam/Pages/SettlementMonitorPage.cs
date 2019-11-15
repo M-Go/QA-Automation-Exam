@@ -15,15 +15,16 @@ namespace Exam.Pages
         private IWebElement _betLogsButton => _driver.FindElement(By.XPath("//button[@class='transparent icon info']"));
         private IWebElement _filterButton => _driver.FindElement(By.CssSelector(".event-bet-table-filter-wrapper button :nth-child(1)"));
         private IWebElement _timeRangeFromField => _driver.FindElement(By.XPath("//div/input[@name='date']"));
-        private IWebElement _betAmountFromField => _driver.FindElement(By.XPath("//div/input[@class='bo-number-range-input']"));
-        private IWebElement _segmentField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(.,'Все сегменты')]"));
+        private IWebElement _betAmountFromField => _driver.FindElement(By.CssSelector(".bo-number-range :nth-child(1)"));
+        private IWebElement _betAmountToField => _driver.FindElement(By.CssSelector(".bo-number-range :nth-child(3)"));
+        private IWebElement _segmentField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(.,'All segments')]"));
         private IWebElement _noStatusSegmentDropdown => _driver.FindElement(By.XPath("//span/span[contains(.,'Без статуса')]"));
-        private IWebElement _channelField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(.,'Все каналы')]"));
+        private IWebElement _channelField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(.,'All channels')]"));
         private IWebElement _mobileChannelDropdown => _driver.FindElement(By.XPath("//span/span[contains(.,'Mobile')]"));
+        private IWebElement _desktopChannelDropdown => _driver.FindElement(By.XPath("//span/span[contains(.,'Desktop')]"));
         private IWebElement _filterForm => _driver.FindElement(By.XPath("//form[@class='event-bet-table-filter-form']"));
-        private IWebElement _filteringConfirmButton => _driver.FindElement(By.CssSelector(".event-bet-table-filter-button-wrapper :nth-child(2)"));
-        private IWebElement _playerIdClickable => _driver.FindElement(By.XPath("//span[@class='player-profit-status bad']")); //td/div/div/a[@href]"));
-
+        private IWebElement _filteringConfirmButton => _driver.FindElement(By.CssSelector(".warning.raised"));
+        private IWebElement _playerIdClickable => _driver.FindElement(By.XPath("//span[@class='player-profit-status bad']"));
         //assert fields
         private IWebElement _eventDescriptionEventsTree => _driver.FindElement(By.XPath("//label/span/span[last()]"));
         private IWebElement _eventDescriptionEventsList => _driver.FindElement(By.XPath("//div[@class='event-title has-tooltip']"));
@@ -78,25 +79,27 @@ namespace Exam.Pages
             return this;
         }
 
-        //TODO Improve method, make it more flexible
-        public SettlementMonitorPage FilterBets(string date, string amount)
+        public SettlementMonitorPage FilterBets(string date, string amountFrom, string amountTo, string channel)
         {
-            //Thread.Sleep(TimeSpan.FromSeconds(4)); //To wait element on the page
             _filterButton.Click();
             _timeRangeFromField.SendKeys(date);
-            _betAmountFromField.SendKeys(amount);
+            _betAmountFromField.SendKeys(amountFrom);
+            _betAmountToField.SendKeys(amountTo);
             _segmentField.Click();
             _noStatusSegmentDropdown.Click();
             _filterForm.Click(); //click anywhere to close the dropdown
             _channelField.Click();
-            _mobileChannelDropdown.Click();
+            if (channel == "Mobile")
+            {
+                _mobileChannelDropdown.Click();
+            }
+            else
+            {
+                _desktopChannelDropdown.Click();
+            }
             _filterForm.Click(); //click anywhere to close the dropdown
             _filteringConfirmButton.Click();
             return this;
-
-            //select from dropdown does not work
-            //SelectElement selectSegment = new SelectElement(_segmentField);
-            //selectSegment.SelectByValue("Без статуса");
         }
 
         public SettlementMonitorPage NavigateToPlayerHistoryPage()
@@ -105,8 +108,6 @@ namespace Exam.Pages
             return this;
         }
 
-
-        //Assert Methods
         public string GetEventDescriptionInTree()
         {
             IWebElement element = _eventDescriptionEventsTree;

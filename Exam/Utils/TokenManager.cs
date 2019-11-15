@@ -1,4 +1,5 @@
 ﻿using Exam.BackendClients;
+using Exam.Models;
 
 namespace Exam.Utils
 {
@@ -8,9 +9,15 @@ namespace Exam.Utils
 
         public static string GetToken()
         {
+
             if (string.IsNullOrEmpty(_token))
             {
-                _token = new SsoClient().GetSsoResponse().Token;
+                LoginRequestModel loginRequest = new LoginRequestModel();
+                var includeAttributes = new[] { "perm.*" };
+                loginRequest.IncludeAttributes = includeAttributes;
+                loginRequest.UserName = "admin@betlab";
+                loginRequest.Password = "abc";
+                _token = new SsoClient().GetSsoResponse(loginRequest).Token;
                 return _token;
             }
             return _token;

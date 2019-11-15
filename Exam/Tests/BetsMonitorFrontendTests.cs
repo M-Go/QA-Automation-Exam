@@ -1,6 +1,4 @@
 ﻿using Exam.BackendClients;
-using Exam.DataProvider;
-using Exam.DataProvider.TestData;
 using Exam.Models;
 using Exam.Models.Filtering;
 using Exam.Pages;
@@ -24,78 +22,39 @@ namespace Exam.Tests
             loginViaApi.LoginViaApi("/monitors/bets/");
         }
 
-        [TestCaseSource(typeof(FilteringTestData), nameof(FilteringTestData.GetFilteringData))]
-        public void NavigateToPlayerHistoryFromBetsMonitor(FilterProvider filteringData)
+        [TestCase("2019-08-26T21:00:00.000Z", "929297369")]
+        public void NavigateToPlayerHistoryFromBetsMonitor(string acceptTime, string playerId)
         {
             _betsMonitorPage = new BetsMonitorPage();
             _betsMonitorPage
-                .FilterBetsByAcceptTimeAndPlayerId(filteringData.Date, filteringData.PlayerId)
+                .FilterBetsByAcceptTimeAndPlayerId(acceptTime, playerId)
                 .NavigateToPlayerHistoryPage();
             _playerHistoryPage = new PlayerHistoryPage();
 
-            Assert.AreEqual(filteringData.PlayerId, _playerHistoryPage.GetPlayerId(), "Player ID does not match");
+            Assert.AreEqual(playerId, _playerHistoryPage.GetPlayerId(), "Player ID does not match");
         }
 
-        [TestCase(0, "MOBILE_WEB", "2019 -08-26T21:00:00.000Z")]
-        public void VerifyEventNames(int segment, string channel, string acceptTime)
+        [TestCase("929297369", "2019-08-26T21:00:00.000Z")]
+        public void VerifyEventNames(string playerId, string acceptTime)
         {
             BetsClient client = new BetsClient();
-            FilteringRequest betsRequest = new FilteringRequest();
+            FilteringRequestModel betsRequest = new FilteringRequestModel();
             InFilterModel inFilter = new InFilterModel();
-            var segments = new[] { segment };
-            inFilter.SegmentIds = segments;
-            var channels = new[] { channel };           
-            inFilter.Channels = channels;
+            var playerIds = new[] { playerId };
+            inFilter.PlayerIds = playerIds;
             betsRequest.InFilter = inFilter;
-
-            //oDataFilter\":\"(eventId eq '520012') and (acceptTime ge 2019-08-26T21:00:00.000Z) and (acceptTime lt 2019-09-13T11:00:53.672Z) and (betBaseAmount ge 1)
             betsRequest.ODataFilter = $"(acceptTime ge {acceptTime})";
             betsRequest.Take = 50;
-            List<BetsResponse> betsResponse = client.GetBets(betsRequest);
-
-            
+            List<BetsResponseModel> betsResponse = client.GetBets(betsRequest);          
             var allEventNamesFromResponse = from bet in betsResponse select bet.EventName;
             var validEventNamesFromResponse = allEventNamesFromResponse.Where(name => name != null).ToList();
 
             _betsMonitorPage = new BetsMonitorPage();
             _betsMonitorPage
-                .FilterBetsByAcceptTimeAndPlayerId(filteringData.Date, filteringData.PlayerId);
-
+                .FilterBetsByAcceptTimeAndPlayerId(acceptTime, playerId);
             var allEventNamesFromUi = _betsMonitorPage.GetEventNames();
             var validEventNamesFromUi = allEventNamesFromResponse.Where(name => name != null).ToList();
-
-
-            //bool eventNamesComparisonResult = Enumerable.SequenceEqual(allEventNamesFromResponse, allEventNamesFromUi);
-
-            CollectionAssert.AreEqual(validEventNamesFromResponse, validEventNamesFromUi, "Event names do not match");
-            //IsTrue(eventNamesComparisonResult, "Event names do not match");
-
-
-            //Compare events amount
-
-            ////List<string> playerIds = new List<string>();
-            //var ids = from bet in betsResponse select bet.PlayerId;
-
-            //int betsCount = betsResponse.Count();
-
-            //int i = 0;
-            //while (i <= betsCount)
-            //{
-            //    playerIds.Add(betsResponse[i].PlayerId);
-            //    i++;
-            //}
-
-
-
-            //foreach (BetsResponse playerId in betsResponse)
-            //{
-            //    playerIds.Add(betsResponse.PlayerId);
-            //}
-            //for (int i = 0; i <= betsCount; i++)
-            //{
-            //    playerIds.Add(betsResponse[i].PlayerId);
-            //}
-            //    Console.WriteLine(ids);
+            CollectionAssert.AreEqual(validEventNamesFromResponse, validEventNamesFromUi, "Event names do not match");           
         }
     }
 }

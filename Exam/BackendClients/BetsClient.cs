@@ -17,7 +17,7 @@ namespace Exam.BackendClients
             _backoffice.SetToken(TokenManager.GetToken());
         }
 
-        public List<BetsResponse> GetBets(FilteringRequest request)
+        public List<BetsResponseModel> GetBets(FilteringRequestModel request)
         {
 
             var jsonBody = JsonConvert.SerializeObject(request);
@@ -27,7 +27,7 @@ namespace Exam.BackendClients
                 throw new Exception("Cannot get bets");
             }
             var result = response.Content.ReadAsStringAsync().Result;
-            List<BetsResponse> resultJObject = JsonConvert.DeserializeObject<List<BetsResponse>>(result);
+            List<BetsResponseModel> resultJObject = JsonConvert.DeserializeObject<List<BetsResponseModel>>(result);
             return resultJObject;
         }
     }

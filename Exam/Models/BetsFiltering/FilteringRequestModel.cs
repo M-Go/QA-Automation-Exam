@@ -2,7 +2,7 @@
 
 namespace Exam.Models.Filtering
 {
-    public class FilteringRequest
+    public class FilteringRequestModel
     {
         [JsonProperty(PropertyName = "inFilter")]
         public InFilterModel InFilter { get; set; }
