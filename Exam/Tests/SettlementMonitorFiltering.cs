@@ -14,11 +14,13 @@ namespace Exam.Tests
         private SettlementMonitorPage _settlementMonitorPage;
         private PlayerHistoryPage _playerHistoryPage;
 
-        [SetUp]
+        [SetUp()]
         public void BeforeTest()
         {
             Login loginViaApi = new Login();
             loginViaApi.LoginViaApi("/monitors/settlement/");
+            Localization selectLanguage = new Localization();
+            selectLanguage.SelectLanguage("ru", "admin@betlab");
         }
 
         [TestCase("28.08.19 - 03.09.19", "ЦСКА", "27.08.2019 00:00:00", "1", "10", "Mobile", "929297369")]

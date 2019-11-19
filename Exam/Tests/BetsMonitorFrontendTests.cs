@@ -20,6 +20,8 @@ namespace Exam.Tests
         {
             Login loginViaApi = new Login();
             loginViaApi.LoginViaApi("/monitors/bets/");
+            Localization selectLanguage = new Localization();
+            selectLanguage.SelectLanguage("ru", "admin@betlab");
         }
 
         [TestCase("2019-08-26T21:00:00.000Z", "929297369")]

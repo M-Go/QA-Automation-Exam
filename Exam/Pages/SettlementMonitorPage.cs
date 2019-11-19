@@ -17,9 +17,9 @@ namespace Exam.Pages
         private IWebElement _timeRangeFromField => _driver.FindElement(By.XPath("//div/input[@name='date']"));
         private IWebElement _betAmountFromField => _driver.FindElement(By.CssSelector(".bo-number-range :nth-child(1)"));
         private IWebElement _betAmountToField => _driver.FindElement(By.CssSelector(".bo-number-range :nth-child(3)"));
-        private IWebElement _segmentField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(.,'All segments')]"));
+        private IWebElement _segmentField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(.,'Все сегменты')]"));
         private IWebElement _noStatusSegmentDropdown => _driver.FindElement(By.XPath("//span/span[contains(.,'Без статуса')]"));
-        private IWebElement _channelField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(.,'All channels')]"));
+        private IWebElement _channelField => _driver.FindElement(By.XPath("//span[@class='multiselect__placeholder'][contains(.,'Все каналы')]"));
         private IWebElement _mobileChannelDropdown => _driver.FindElement(By.XPath("//span/span[contains(.,'Mobile')]"));
         private IWebElement _desktopChannelDropdown => _driver.FindElement(By.XPath("//span/span[contains(.,'Desktop')]"));
         private IWebElement _filterForm => _driver.FindElement(By.XPath("//form[@class='event-bet-table-filter-form']"));
